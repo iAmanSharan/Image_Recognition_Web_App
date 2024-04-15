@@ -1,0 +1,60 @@
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: rgb(197, 67, 230);
+            background-size: cover;
+            font-family: "Dekko";
+            color : white;
+        }
+        .center-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(80, 10, 161);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 400px; /* Adjust based on your preference */
+            text-align: center;
+            border-radius: 10px; /* Optional: for rounded corners */
+        }
+        .file-upload-wrapper {
+            height: 100px; /* Adjust based on your preference */
+            width: 300px; /* Adjust based on your preference */
+            border: 2px dashed #4CAF50; /* Dashed border */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto; /* Centering the box */
+            cursor: pointer;
+        }
+        .file-upload-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none; /* Initially hide the image */
+        }
+        .file-upload-wrapper:hover {
+            background-color: #f4f4f4; /* Light background on hover */
+        }
+        input[type="file"] {
+            display: none; /* Hide the default input */
+        }
+        button {
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            padding: 10px 20px; /* Padding inside the button */
+            border: none; /* No border */
+            cursor: pointer; /* Pointer/hand icon on hover */
+            width: 100%; /* Full width */
+            border-radius: 5px; /* Optional: for rounded corners */
+        }
+        button:hover {
+            background-color: #45a049; /* Darker shade of green on hover */
+        }
+        
+        h2 {
+            font-size: 200%;
+        }
+        
