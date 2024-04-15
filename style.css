@@ -16,7 +16,7 @@
             background-color: rgb(80, 10, 161);
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 400px; /* Adjust based on your preference */
+            width: 50%; /* Adjust based on your preference */
             text-align: center;
             border-radius: 10px; /* Optional: for rounded corners */
         }
@@ -52,9 +52,5 @@
         }
         button:hover {
             background-color: #45a049; /* Darker shade of green on hover */
-        }
-        
-        h2 {
-            font-size: 200%;
         }
         
