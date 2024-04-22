@@ -3,27 +3,28 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            background: rgb(197, 67, 230);
+            background-image: linear-gradient(to bottom right, rgb(100, 100, 250), rgb(250, 92, 224));
             background-size: cover;
             font-family: "Dekko";
-            color : white;
+            color : whitesmoke;
         }
         .center-box {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgb(80, 10, 161);
+            background-image: linear-gradient(to bottom right, rgb(161, 166, 245), rgb(16, 16, 241));
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 15px 20px 10px 15px rgba(0, 0, 0, 0.521);
             width: 50%; /* Adjust based on your preference */
             text-align: center;
             border-radius: 10px; /* Optional: for rounded corners */
+            color: whitesmoke;
         }
         .file-upload-wrapper {
             height: 100px; /* Adjust based on your preference */
             width: 300px; /* Adjust based on your preference */
-            border: 2px dashed #4CAF50; /* Dashed border */
+            border: 2px none #4CAF50; /* Dashed border */
             display: flex;
             align-items: center;
             justify-content: center;
