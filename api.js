@@ -1,26 +1,41 @@
-import axios from 'axios';
+document.addEventListener('DOMContentLoaded', function() {
+    const submitButton = document.querySelector('button[type="submit"]');
+    const fileInput = document.getElementById('file-upload');
 
-// Assuming Vue 3 composition API
-export default {
-  name: 'ImageUpload',
-  methods: {
-    async uploadImage(file) {
-      const formData = new FormData();
-      formData.append('image', file);
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
 
-      try {
-        const response = await axios.post('http://localhost:5000/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please select a file before submitting.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        // Notify the user that the upload is starting
+        alert('Starting file upload...');
+
+        fetch('http://localhost:5000/upload-image', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            // Notify the user of a successful upload
+            alert('File uploaded successfully!');
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+            // Notify the user of an error
+            alert('Failed to upload the file.');
         });
-        // Handle response here
-        console.log(response.data);
-        // Update your Vue component's data or state as needed
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        // Handle error here
-      }
-    },
-  },
-};
+    });
+});

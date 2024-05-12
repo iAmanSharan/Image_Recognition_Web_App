@@ -33,3 +33,4 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('file-upload').click();
     });
 });
+

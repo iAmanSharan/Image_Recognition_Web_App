@@ -1,24 +1,25 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import os
-from image_segmentation import segment_image
+import image_segmentation
 
 app = Flask(__name__)
 
-# Configure the upload and segmented images folder
+# Configuration
 UPLOAD_FOLDER = 'uploads'
-SEGMENTED_FOLDER = 'segmented_images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SEGMENTED_FOLDER'] = SEGMENTED_FOLDER
+
+# Ensure the upload folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
+@app.route('/upload-image', methods=['POST'])
+def upload_image():
     if 'image' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     file = request.files['image']
@@ -29,21 +30,12 @@ def upload_file():
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(save_path)
         
-        # After saving, call the segmentation function
-        segmented_image_path = segment_image(save_path)
+        # Call the image segmentation function
+        segmentation_result = image_segmentation.process_image(save_path)
         
-        # Assuming segment_image returns a path relative to SEGMENTED_FOLDER
-        # Extract the filename of the segmented image
-        segmented_filename = os.path.basename(segmented_image_path)
-        
-        # Return the URL or path for the segmented image
-        return jsonify({'message': 'File successfully uploaded and segmented', 'filename': filename, 'segmented_image_url': f'/segmented/{segmented_filename}'}), 200
-    else:
-        return jsonify({'error': 'File type not allowed'}), 400
+        return jsonify({'message': 'File successfully uploaded and processed', 'segmentation_result': segmentation_result}), 200
 
-@app.route('/segmented/<filename>')
-def segmented_image(filename):
-    return send_from_directory(app.config['SEGMENTED_FOLDER'], filename)
+    return jsonify({'error': 'File type not allowed'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
