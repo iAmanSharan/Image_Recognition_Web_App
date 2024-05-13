@@ -19,9 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Adjust the image dimensions to match the file-upload-wrapper
-                uploadedImage.style.width = '100%';
-                uploadedImage.style.height = '100%';
-                uploadedImage.style.objectFit = 'contain'; // Ensure the aspect ratio is maintained without cropping
+                uploadedImage.style.width = '200%';
+                uploadedImage.style.height = '200%';
+                uploadedImage.style.objectFit = 'cover';  //Ensure the aspect ratio is maintained without cropping
+                //uploadedImage.style.padding = "10px";
             };
 
             reader.readAsDataURL(file); // Read the file as a Data URL to use as the image source
@@ -33,4 +34,5 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('file-upload').click();
     });
 });
+
 
