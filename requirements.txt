@@ -3,3 +3,5 @@ transformers
 flask-cors
 tensorflow
 keras
+torch 
+pillow

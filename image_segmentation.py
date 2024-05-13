@@ -1,38 +1,42 @@
-from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
+from transformers import SegformerFeatureExtractor, SegformerForSemanticSegmentation
 from PIL import Image
-import torch  # Ensure you have PyTorch installed as it's required by transformers
+import torch
 
-# Initialize the processor and model only once to avoid reloading them on each request
-processor = SegformerImageProcessor.from_pretrained("nvidia/segformer-b0-finetuned-ade-512-512")
-model = SegformerForSemanticSegmentation.from_pretrained("nvidia/segformer-b0-finetuned-ade-512-512")
+def load_model():
+    # Load the feature extractor and model from Hugging Face
+    feature_extractor = SegformerFeatureExtractor.from_pretrained("nvidia/segformer-b0-finetuned-cityscapes-1024-1024")
+    model = SegformerForSemanticSegmentation.from_pretrained("nvidia/segformer-b0-finetuned-cityscapes-1024-1024")
+    return feature_extractor, model
 
-def segment_image(image_path):
-    """
-    Segments the image at the given path using the Segformer model.
-    
-    Args:
-        image_path (str): The path to the image file to segment.
-    
-    Returns:
-        str: The path to the segmented image.
-    """
+def preprocess_image(image_path, feature_extractor):
     # Load the image
-    image = Image.open(image_path)
+    image = Image.open(image_path).convert("RGB")
+    # Preprocess the image
+    inputs = feature_extractor(images=image, return_tensors="pt")
+    return inputs
 
-    # Process the image and perform segmentation
-    inputs = processor(images=image, return_tensors="pt")
+def perform_segmentation(inputs, model):
+    # Perform segmentation
     outputs = model(**inputs)
-    logits = outputs.logits  # shape (batch_size, num_labels, height/4, width/4)
+    # The model outputs logits which we need to convert to pixel-wise labels
+    logits = outputs.logits
+    # Apply softmax to calculate probabilities
+    probs = torch.nn.functional.softmax(logits, dim=1)
+    # Take the argmax across channels to get the label for each pixel
+    predictions = torch.argmax(probs, dim=1)
+    return predictions.squeeze().cpu().numpy()
 
-    # Convert logits to an image (for simplicity, taking the argmax to get the most likely label per pixel)
-    # Note: This is a simplified approach, and you might want to apply a color map or further processing
-    # to convert model output to a visually meaningful segmentation map
-    segmentation = logits.argmax(dim=1)[0]  # Take the highest scoring class for each pixel
-    segmentation_image = segmentation.cpu().detach().numpy()  # Convert to numpy array
+def process_image(image_path):
+    feature_extractor, model = load_model()
+    inputs = preprocess_image(image_path, feature_extractor)
+    segmentation_map = perform_segmentation(inputs, model)
+    # Here, segmentation_map is a 2D numpy array where each value represents a class label for each pixel
+    # You can further process the segmentation_map as needed, e.g., visualize it or save it to a file
+    print("Segmentation completed.")
+    # For demonstration, let's just return a placeholder
+    return "Segmentation result placeholder"
 
-    # For demonstration, let's just save the segmentation as an image
-    # You might want to apply a color map here to visualize different segments
-    segmented_image_path = image_path.replace('.jpg', '_segmented.jpg')  # Modify as needed for other file types
-    Image.fromarray(segmentation_image).save(segmented_image_path)
-
-    return segmented_image_path
+# Example usage
+if __name__ == "__main__":
+    image_path = "path/to/your/image.jpg"
+    process_image(image_path)
