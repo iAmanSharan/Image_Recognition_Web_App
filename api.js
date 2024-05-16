@@ -17,7 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Notify the user that the upload is starting
         alert('Starting file upload...');
 
-        fetch('http://localhost:5000/upload-image', {
+        // Dynamically construct the URL
+        const baseUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+const uploadUrl = `${baseUrl}/upload-image`;
+
+        fetch(uploadUrl, {
             method: 'POST',
             body: formData,
         })
