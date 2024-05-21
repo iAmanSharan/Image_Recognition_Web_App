@@ -1,42 +1,42 @@
-from transformers import SegformerFeatureExtractor, SegformerForSemanticSegmentation
-from PIL import Image
 import torch
+from PIL import Image
+from transformers import SegformerFeatureExtractor, SegformerForSemanticSegmentation
+import numpy as np
+from torchvision.transforms import functional as F
 
 def load_model():
-    # Load the feature extractor and model from Hugging Face
+    # Load feature extractor and model from Hugging Face
     feature_extractor = SegformerFeatureExtractor.from_pretrained("nvidia/segformer-b0-finetuned-cityscapes-1024-1024")
     model = SegformerForSemanticSegmentation.from_pretrained("nvidia/segformer-b0-finetuned-cityscapes-1024-1024")
     return feature_extractor, model
 
 def preprocess_image(image_path, feature_extractor):
-    # Load the image
+    # Load image and preprocess
     image = Image.open(image_path).convert("RGB")
-    # Preprocess the image
     inputs = feature_extractor(images=image, return_tensors="pt")
-    return inputs
+    return inputs['pixel_values']
 
-def perform_segmentation(inputs, model):
+def segment_image(pixel_values, model):
     # Perform segmentation
-    outputs = model(**inputs)
-    # The model outputs logits which we need to convert to pixel-wise labels
-    logits = outputs.logits
-    # Apply softmax to calculate probabilities
-    probs = torch.nn.functional.softmax(logits, dim=1)
-    # Take the argmax across channels to get the label for each pixel
-    predictions = torch.argmax(probs, dim=1)
-    return predictions.squeeze().cpu().numpy()
+    model.eval()
+    with torch.no_grad():
+        outputs = model(pixel_values)
+    return outputs.logits
 
-def process_image(image_path):
+def save_segmented_image(logits, feature_extractor, output_path):
+    # Convert logits to image
+    logits = logits[0]  # we only processed one image
+    seg_image = torch.argmax(logits, dim=0)
+    seg_image = seg_image.detach().cpu().numpy()
+    colorized_image = feature_extractor.decode_segmentation(seg_image)
+    colorized_image = Image.fromarray(colorized_image.astype('uint8'), 'RGB')
+    colorized_image.save(output_path)
+
+def process_image(image_path, output_path):
     feature_extractor, model = load_model()
-    inputs = preprocess_image(image_path, feature_extractor)
-    segmentation_map = perform_segmentation(inputs, model)
-    # Here, segmentation_map is a 2D numpy array where each value represents a class label for each pixel
-    # You can further process the segmentation_map as needed, e.g., visualize it or save it to a file
-    print("Segmentation completed.")
-    # For demonstration, let's just return a placeholder
-    return "Segmentation result placeholder"
+    pixel_values = preprocess_image(image_path, feature_extractor)
+    logits = segment_image(pixel_values, model)
+    save_segmented_image(logits, feature_extractor, output_path)
 
 # Example usage
-if __name__ == "__main__":
-    image_path = "path/to/your/image.jpg"
-    process_image(image_path)
+process_image('path_to_your_image.jpg', 'output_segmented_image.jpg')
