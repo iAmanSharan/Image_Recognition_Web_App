@@ -16,8 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert('Starting file upload...');
 
-        const baseUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-        const uploadUrl = `${baseUrl}/upload-image`;
+        const uploadUrl = 'https://probable-space-orbit-4p96xw57xgrhxgg-5000.app.github.dev/upload-image'
 
         fetch(uploadUrl, {
             method: 'POST',

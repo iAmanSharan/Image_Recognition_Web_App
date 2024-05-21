@@ -1,11 +1,9 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-   # The rest of your code remains the same
-
 # Configure the upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
