@@ -3,7 +3,7 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="https://fantastic-acorn-6x7wj4qgjxgc49q4-5506.app.github.dev")
 
 # Configure the upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'
@@ -32,6 +32,9 @@ def upload_image():
     else:
         return jsonify({'error': 'File type not allowed'}), 400
 
+@app.route('/')
+def home():
+    return "Hello, world"
 
 if __name__ == '__main__':
     # Create the upload folder if it doesn't exist
