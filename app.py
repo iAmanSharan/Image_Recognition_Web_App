@@ -3,7 +3,7 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, origins="https://fantastic-acorn-6x7wj4qgjxgc49q4-5506.app.github.dev")
+CORS(app)
 
 # Configure the upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'

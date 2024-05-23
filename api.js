@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert('Starting file upload...');
 
-        const uploadUrl = 'https://fantastic-acorn-6x7wj4qgjxgc49q4-5506.app.github.dev/upload-image'
+        const uploadUrl = 'http://127.0.0.1:5000/upload-image'
 
         fetch(uploadUrl, {
             method: 'POST',
