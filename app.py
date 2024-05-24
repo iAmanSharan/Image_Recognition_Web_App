@@ -4,7 +4,7 @@ from flask_cors import CORS
 from image_segmentation import process_image  # Import the segmentation function
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,origins="https://symmetrical-space-winner-57p5wxjgqx437wr4-5506.app.github.dev/")
 
 # Configure the upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'
@@ -52,6 +52,10 @@ def upload_image():
         return jsonify({'message': 'File uploaded and segmented successfully', 'filename': output_filename}), 200
     else:
         return jsonify({'error': 'File type not allowed'}), 400
+
+@app.route('/')
+def home():
+    return 'Hi'
 
 if __name__ == '__main__':
     # Create the upload and segmented folders if they don't exist

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert('Starting file upload...');
 
-        const uploadUrl = 'http://127.0.0.1:5000/upload-image'
+        const uploadUrl = 'https://symmetrical-space-winner-57p5wxjgqx437wr4-5000.app.github.dev/upload-image'
 
         fetch(uploadUrl, {
             method: 'POST',
