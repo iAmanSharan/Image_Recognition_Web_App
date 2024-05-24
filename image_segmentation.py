@@ -3,6 +3,7 @@ from PIL import Image
 from transformers import SegformerFeatureExtractor, SegformerForSemanticSegmentation
 import numpy as np
 from torchvision.transforms import functional as F
+import matplotlib.pyplot as plt
 
 def load_model():
     # Load feature extractor and model from Hugging Face
@@ -23,13 +24,24 @@ def segment_image(pixel_values, model):
         outputs = model(pixel_values)
     return outputs.logits
 
-def save_segmented_image(logits, feature_extractor, output_path):
-    # Convert logits to image
+def save_segmented_image(logits, output_path):
     logits = logits[0]  # we only processed one image
     seg_image = torch.argmax(logits, dim=0)
     seg_image = seg_image.detach().cpu().numpy()
-    colorized_image = feature_extractor.decode_segmentation(seg_image)
-    colorized_image = Image.fromarray(colorized_image.astype('uint8'), 'RGB')
+
+    # Create a color map
+    cmap = plt.get_cmap('tab20')  # You can choose a colormap that fits your labels
+    max_label = seg_image.max() + 1
+    colors = cmap(list(range(max_label)))
+
+    # Map each label to a color
+    colorized_image = np.zeros((seg_image.shape[0], seg_image.shape[1], 3), dtype=np.uint8)
+    for label in range(max_label):
+       mask = seg_image == label
+       colorized_image[mask] = np.array(colors[label][:3]) * 255
+
+    # Convert array to PIL Image and save
+    colorized_image = Image.fromarray(colorized_image, 'RGB')
     colorized_image.save(output_path)
 
 def process_image(image_path, output_path):
@@ -38,5 +50,3 @@ def process_image(image_path, output_path):
     logits = segment_image(pixel_values, model)
     save_segmented_image(logits, feature_extractor, output_path)
 
-# Example usage
-process_image('path_to_your_image.jpg', 'output_segmented_image.jpg')
