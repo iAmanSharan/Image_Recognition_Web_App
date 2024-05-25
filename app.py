@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import os
 from flask_cors import CORS
 from image_segmentation import process_image  # Import the segmentation function
@@ -55,8 +55,7 @@ def upload_image():
 
 @app.route('/')
 def home():
-    return 'Hi'
-
+    return "hi"
 if __name__ == '__main__':
     # Create the upload and segmented folders if they don't exist
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
