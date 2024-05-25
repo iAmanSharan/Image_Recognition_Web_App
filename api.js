@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(uploadUrl, {
             method: 'POST',
             body: formData,
+            mode: 'cors'
         })
         .then(response => {
             if (!response.ok) {
