@@ -2,13 +2,12 @@ from flask import Flask, request, jsonify
 import os
 from image_segmentation import process_image  # Import the segmentation function
 from flask_cors import CORS, cross_origin
+import logging
 
 app = Flask(__name__)
 CORS(app, origin = "*")
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-
-app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Configure the upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'
@@ -28,6 +27,7 @@ def save_image(file):
     filename = file.filename
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(file_path)
+    logging.info("Input File Saved")
     return file_path
 
 def segment_image(file_path):
@@ -35,7 +35,7 @@ def segment_image(file_path):
     filename = os.path.basename(file_path)
     output_filename = 'segmented_' + filename
     output_path = os.path.join(app.config['SEGMENTED_FOLDER'], output_filename)
-    process_image(file_path, output_path)  # Call the segmentation function
+    process_image(file_path, output_path) # Call the segmentation function
     return output_filename
 
 @app.route('/upload-image', methods=['POST'])

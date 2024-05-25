@@ -20,12 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fetch(uploadUrl, {
             method: 'POST',
-            body: formData,
-            mode: "no-cors",
-            headers: {
-                'Accept': 'application/json',
-                // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Uncomment if auth is needed
-            },
+            body: formData
         })
         .then(response => {
             if (!response.ok) {

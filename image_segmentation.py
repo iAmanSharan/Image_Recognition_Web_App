@@ -48,5 +48,5 @@ def process_image(image_path, output_path):
     feature_extractor, model = load_model()
     pixel_values = preprocess_image(image_path, feature_extractor)
     logits = segment_image(pixel_values, model)
-    save_segmented_image(logits, feature_extractor, output_path)
+    save_segmented_image(logits,output_path)
 
