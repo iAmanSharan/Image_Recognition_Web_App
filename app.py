@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
 import os
-from flask_cors import CORS , cross_origin
 from image_segmentation import process_image  # Import the segmentation function
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-CORS(app,Origin="*")
+CORS(app, origin = "*")
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -37,7 +39,7 @@ def segment_image(file_path):
     return output_filename
 
 @app.route('/upload-image', methods=['POST'])
-@cross_origin()
+@cross_origin(origin = "*")
 def upload_image():
     # Check if the post request has the file part
     if 'image' not in request.files:
