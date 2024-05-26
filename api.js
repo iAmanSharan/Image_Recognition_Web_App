@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.querySelector('button[type="submit"]');
     const fileInput = document.getElementById('file-upload');
+    const segmentedImage = document.getElementById('segmented-image');
 
     submitButton.addEventListener('click', function(event) {
         event.preventDefault();
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert('Starting file upload...');
 
-        const uploadUrl = 'https://symmetrical-space-winner-57p5wxjgqx437wr4-5000.app.github.dev/upload-image'
+        const uploadUrl = 'https://fictional-eureka-4p96xw57x45hvrj-5000.app.github.dev/upload-image'
 
         fetch(uploadUrl, {
             method: 'POST',
@@ -31,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             console.log(data.filename);
             alert('File uploaded successfully!');
+            segmentedImage.src = data.segmentedImageUrl;
+            segmentedImage.style.display = 'block';
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);
