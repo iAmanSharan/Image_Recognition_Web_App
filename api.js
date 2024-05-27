@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.querySelector('button[type="submit"]');
     const fileInput = document.getElementById('file-upload');
-    const segmentedImage = document.getElementById('segmented-image');
+    
 
     submitButton.addEventListener('click', function(event) {
         event.preventDefault();
@@ -17,11 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert('Starting file upload...');
 
-        const uploadUrl = 'https://fictional-eureka-4p96xw57x45hvrj-5000.app.github.dev/upload-image'
+        const uploadUrl = 'https://5000-iamansharan-imagerecogn-ugnwd6imht4.ws-us114.gitpod.io/upload-image'
 
         fetch(uploadUrl, {
             method: 'POST',
-            body: formData
+            body: formData,
+            mode: "cors"
         })
         .then(response => {
             if (!response.ok) {
@@ -32,8 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             console.log(data.filename);
             alert('File uploaded successfully!');
-            segmentedImage.src = data.segmentedImageUrl;
-            segmentedImage.style.display = 'block';
+            const uploadedImage = document.getElementById('uploaded-image');
+            uploadedImage.src = `https://5000-iamansharan-imagerecogn-ugnwd6imht4.ws-us114.gitpod.io/segmented-images/${data.filename}`;
+            uploadedImage.style.display = 'block';
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);
